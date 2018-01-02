@@ -27,7 +27,7 @@
     "prestart": "aws kms decrypt --ciphertext-blob fileb://.env-secret --output text --query Plaintext | base64 --decode > .env",
     "debug": "node debug app.js",
     "start": "node app.js",
-    "precommit": "aws kms encrypt --key-id $KEYID --plaintext fileb://.env --output text --query CiphertextBlob | base64 --decode > .env-secret"
+    "precommit": "aws kms encrypt --key-id $KEYID --plaintext fileb://.env --output text --query CiphertextBlob | base64 --decode > .env-secret && git add .env-secret"
   },
   "main": "app.js",
   "repository": {
