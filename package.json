@@ -35,5 +35,8 @@
     "url": "git://github.com/paulo/dotenv.git"
   },
   "author": "paulo",
-  "license": ""
+  "license": "",
+  "devDependencies": {
+    "husky": "^0.14.3"
+  }
 }
