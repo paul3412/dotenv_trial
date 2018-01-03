@@ -3,9 +3,12 @@ branch-defaults:
     environment: null
     group_suffix: null
   master:
-    environment: bean-dev
+    environment: tk-bean
     group_suffix: null
 environment-defaults:
+  bean-dev:
+    branch: null
+    repository: null
   tkalb:
     branch: null
     repository: null

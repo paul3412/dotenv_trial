@@ -1,11 +1,12 @@
 {
-  "name": "dotenv",
+  "name": "dotenv_trial",
   "private": true,
   "version": "0.0.0",
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
     "aws-sdk": "^2.176.0",
+    "dotenv": "^4.0.0",
     "ejs": "2.3.4",
     "grunt": "1.0.1",
     "grunt-contrib-clean": "1.0.0",
@@ -36,6 +37,5 @@
   },
   "author": "paulo",
   "license": "",
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
