@@ -6,6 +6,8 @@
  */
 
 module.exports = {
-	
+    health : (req, res) => {
+      res.ok()
+    }
 };
 
