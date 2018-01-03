@@ -22,6 +22,45 @@
 // Ensure we're in the project directory, so cwd-relative paths work as expected
 // no matter where we actually lift from.
 // > Note: This is not required in order to lift, but it is a convenient default.
+
+const AWS = require('aws-sdk')
+AWS.config.update({region:'us-east-1'})
+const kms = new AWS.KMS()
+const fs = require('fs')
+
+const params = {
+  CiphertextBlob: fs.readFileSync('.env-secret')
+}
+
+kms.decrypt(params, function(err, data){
+  if (err)
+    console.log(err)
+  fs.writeFileSync('.env', data.Plaintext)
+  console.log('.env file created')
+
+  // --•
+  // Try to get `rc` dependency (for loading `.sailsrc` files).
+  var rc;
+  try {
+    rc = require('rc');
+  } catch (e0) {
+    try {
+      rc = require('sails/node_modules/rc');
+    } catch (e1) {
+      console.error('Could not find dependency: `rc`.');
+      console.error('Your `.sailsrc` file(s) will be ignored.');
+      console.error('To resolve this, run:');
+      console.error('npm install rc --save');
+      rc = function () { return {}; };
+    }
+  }
+
+
+  // Start server
+  sails.lift(rc('sails'));
+
+})
+
 process.chdir(__dirname);
 
 // Attempt to import `sails`.
@@ -37,24 +76,3 @@ try {
   console.error('but if it doesn\'t, the app will run with the global sails instead!');
   return;
 }
-
-// --•
-// Try to get `rc` dependency (for loading `.sailsrc` files).
-var rc;
-try {
-  rc = require('rc');
-} catch (e0) {
-  try {
-    rc = require('sails/node_modules/rc');
-  } catch (e1) {
-    console.error('Could not find dependency: `rc`.');
-    console.error('Your `.sailsrc` file(s) will be ignored.');
-    console.error('To resolve this, run:');
-    console.error('npm install rc --save');
-    rc = function () { return {}; };
-  }
-}
-
-
-// Start server
-sails.lift(rc('sails'));
