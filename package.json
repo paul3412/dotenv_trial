@@ -27,7 +27,7 @@
   "scripts": {
     "debug": "node debug app.js",
     "start": "node app.js",
-    "precommit": "if [ $ALIAS ]; then aws kms encrypt --key-id alias/$ALIAS --plaintext fileb://.env --output text --query CiphertextBlob | base64 --decode > .env-secret && git add .env-secret; fi;"
+    "update-env": "if [ $ALIAS ]; then aws kms encrypt --key-id alias/$ALIAS --plaintext fileb://.env --output text --query CiphertextBlob | base64 --decode > .env-secret; fi;"
   },
   "main": "app.js",
   "repository": {
@@ -37,6 +37,5 @@
   "author": "paulo",
   "license": "",
   "devDependencies": {
-    "husky": "^0.14.3"
   }
 }
