@@ -9,7 +9,7 @@
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.bootstrap.html
  */
 
-require('dotenv').config()
+// require('dotenv').config()
 
 module.exports.bootstrap = function(cb) {
 

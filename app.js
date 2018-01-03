@@ -32,12 +32,26 @@ const params = {
   CiphertextBlob: fs.readFileSync('.env-secret')
 }
 
+let env_values;
+
 kms.decrypt(params, function(err, data){
   if (err)
     console.log("Could not Decrypt .. Using defaults")
   else {
-    fs.writeFileSync('.env', data.Plaintext)
-    console.log('.env file created')
+    if(process.env.CREATE_ENV){
+      fs.writeFileSync('.env', data.Plaintext)
+      require('dotenv').config()
+      console.log('.env file created')
+    }
+    else {
+      env_values = Buffer.from(data.Plaintext, 'base64').toString()
+      let parsedObj = require('dotenv').parse(env_values)
+      Object.keys(parsedObj).forEach(function (key) {
+        if (!process.env.hasOwnProperty(key)) {
+          process.env[key] = parsedObj[key]
+        }
+      })
+    }
   }
 
   // --•
