@@ -28,11 +28,7 @@ AWS.config.update({region:'us-east-1'})
 const kms = new AWS.KMS()
 const fs = require('fs')
 
-const params = {
-  CiphertextBlob: fs.readFileSync('.env-secret')
-}
-
-let env_values;
+const params = {CiphertextBlob: fs.readFileSync('.env-secret')}
 
 kms.decrypt(params, function(err, data){
   if (err)
@@ -44,8 +40,7 @@ kms.decrypt(params, function(err, data){
       console.log('.env file created')
     }
     else {
-      env_values = Buffer.from(data.Plaintext, 'base64').toString()
-      let parsedObj = require('dotenv').parse(env_values)
+      let parsedObj = require('dotenv').parse(Buffer.from(data.Plaintext, 'base64').toString())
       Object.keys(parsedObj).forEach(function (key) {
         if (!process.env.hasOwnProperty(key)) {
           process.env[key] = parsedObj[key]
