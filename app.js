@@ -34,9 +34,11 @@ const params = {
 
 kms.decrypt(params, function(err, data){
   if (err)
-    console.log(err)
-  fs.writeFileSync('.env', data.Plaintext)
-  console.log('.env file created')
+    console.log("Could not Decrypt .. Using defaults")
+  else {
+    fs.writeFileSync('.env', data.Plaintext)
+    console.log('.env file created')
+  }
 
   // --•
   // Try to get `rc` dependency (for loading `.sailsrc` files).
