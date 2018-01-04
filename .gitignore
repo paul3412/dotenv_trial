@@ -40,7 +40,8 @@
 ################################################
 
 config/local.js
-.env
+.env-dev
+.env-prod
 
 
 
@@ -116,3 +117,8 @@ npm-debug.log
 nbproject
 .idea
 .node_history
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
