@@ -27,49 +27,62 @@ const AWS = require('aws-sdk')
 AWS.config.update({region:'us-east-1'})
 const kms = new AWS.KMS()
 const fs = require('fs')
+const async = require('async')
 
-const params = {CiphertextBlob: fs.readFileSync('.env-secret')}
+async.parallel([
+  (callback) => {
+    const params = {CiphertextBlob: fs.readFileSync('.env-secret-dev')}
 
-kms.decrypt(params, function(err, data){
-  if (err)
-    console.log("Could not Decrypt .. Using defaults")
-  else {
-    if(process.env.CREATE_ENV){
-      fs.writeFileSync('.env', data.Plaintext)
-      require('dotenv').config()
-      console.log('.env file created')
-    }
-    else {
-      let parsedObj = require('dotenv').parse(Buffer.from(data.Plaintext, 'base64').toString())
-      Object.keys(parsedObj).forEach(function (key) {
-        if (!process.env.hasOwnProperty(key)) {
-          process.env[key] = parsedObj[key]
+    kms.decrypt(params, function(err, data){
+      if (err)
+        callback("Could not Decrypt env-secret-dev .. Using defaults")
+      else {
+        if(process.env.CREATE_ENV){
+          fs.writeFileSync('.env-dev', data.Plaintext)
+          require('dotenv').config()
+          console.log('.env-dev file created')
         }
-      })
-    }
-  }
+        else {
+          let parsedObj = require('dotenv').parse(Buffer.from(data.Plaintext, 'base64').toString())
+          Object.keys(parsedObj).forEach(function (key) {
+            if (!process.env.hasOwnProperty(key)) {
+              process.env[key] = parsedObj[key]
+            }
+          })
+        }
+      }
+      callback(null, null)
+    })
+  },
+  (callback) => {
+    const params = {CiphertextBlob: fs.readFileSync('.env-secret-prod')}
 
-  // --•
-  // Try to get `rc` dependency (for loading `.sailsrc` files).
-  var rc;
-  try {
-    rc = require('rc');
-  } catch (e0) {
-    try {
-      rc = require('sails/node_modules/rc');
-    } catch (e1) {
-      console.error('Could not find dependency: `rc`.');
-      console.error('Your `.sailsrc` file(s) will be ignored.');
-      console.error('To resolve this, run:');
-      console.error('npm install rc --save');
-      rc = function () { return {}; };
-    }
-  }
-
-
+    kms.decrypt(params, function(err, data){
+      if (err)
+        callback("Could not Decrypt .env-secret-prod .. Using defaults")
+      else {
+        if(process.env.CREATE_ENV){
+          fs.writeFileSync('.env-prod', data.Plaintext)
+          require('dotenv').config()
+          console.log('.env-prod file created')
+        }
+        else {
+          let parsedObj = require('dotenv').parse(Buffer.from(data.Plaintext, 'base64').toString())
+          Object.keys(parsedObj).forEach(function (key) {
+            if (!process.env.hasOwnProperty(key)) {
+              process.env[key] = parsedObj[key]
+            }
+          })
+        }
+        callback(null, null)
+      }
+    })
+  },
+], (err, results) => {
+  if(err)
+    console.log(err)
   // Start server
   sails.lift(rc('sails'));
-
 })
 
 process.chdir(__dirname);
@@ -86,4 +99,21 @@ try {
   console.error('When you run `sails lift`, your app will still use a local `./node_modules/sails` dependency if it exists,');
   console.error('but if it doesn\'t, the app will run with the global sails instead!');
   return;
+}
+
+// --•
+// Try to get `rc` dependency (for loading `.sailsrc` files).
+var rc;
+try {
+  rc = require('rc');
+} catch (e0) {
+  try {
+    rc = require('sails/node_modules/rc');
+  } catch (e1) {
+    console.error('Could not find dependency: `rc`.');
+    console.error('Your `.sailsrc` file(s) will be ignored.');
+    console.error('To resolve this, run:');
+    console.error('npm install rc --save');
+    rc = function () { return {}; };
+  }
 }

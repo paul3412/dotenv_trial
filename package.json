@@ -28,7 +28,8 @@
   "scripts": {
     "debug": "node debug app.js",
     "start": "node app.js",
-    "update-env": "if [ $ALIAS ]; then aws kms encrypt --key-id alias/$ALIAS --plaintext fileb://.env --output text --query CiphertextBlob | base64 --decode > .env-secret; fi;"
+    "update-env-dev": "if [ $ALIAS ]; then aws kms encrypt --key-id alias/$ALIAS --plaintext fileb://.env-dev --output text --query CiphertextBlob | base64 --decode > .env-secret-dev; fi;",
+    "update-env-prod": "if [ $ALIAS ]; then aws kms encrypt --key-id alias/$ALIAS --plaintext fileb://.env-prod --output text --query CiphertextBlob | base64 --decode > .env-secret-prod; fi;"
   },
   "main": "app.js",
   "repository": {
