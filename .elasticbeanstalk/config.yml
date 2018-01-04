@@ -3,7 +3,7 @@ branch-defaults:
     environment: null
     group_suffix: null
   master:
-    environment: tk-bean
+    environment: bean-dev
     group_suffix: null
 environment-defaults:
   bean-dev:
